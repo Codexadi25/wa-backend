@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import Messages from './dbMessages.js';
 import Pusher from "pusher";
+import cors from "cors";
 
 // app cofig
 const app = express();
@@ -16,7 +17,14 @@ const pusher = new Pusher({
  });
 
 // midleware
-app.use(express.json())
+app.use(express.json());
+app.use(cors());
+
+// app.use((req, res, next) => {
+//    res.setHeader("Access-Controll-Allow-Origin", "*");
+//    res.setHeader("Access-Controll-Allow-Origin", "*");
+//    next();
+// })
 
 // DB Confg
 const connectionUrl = `mongodb+srv://creedracer111:ylP5rnbcCxjnfsDQ@cluster0.krzbde9.mongodb.net/whatsappdb?retryWrites=true&w=majority`;
@@ -42,7 +50,8 @@ db.once("open", () => {
          const messageDetails =change.fullDocument;
          pusher.trigger('messages', 'inserted', {
             name: messageDetails.user,
-            message: messageDetails.message
+            message: messageDetails.message,
+            timestamp: messageDetails.timestamp
          });
       } else {
          console.log("Error! triggering Pusher")
