@@ -7,12 +7,12 @@ const app = express();
 const port = process.env.PORT || 9000
 
 // midleware
-
+app.use(express.json())
 
 // DB Confg
 const connectionUrl = `mongodb+srv://creedracer111:ylP5rnbcCxjnfsDQ@cluster0.krzbde9.mongodb.net/whatsappdb?retryWrites=true&w=majority`;
 
-mongoose.connect(connectionUrl),{
+await mongoose.connect(connectionUrl),{
    useCreateIndex: true,
    useNewUrlParser: true,
    useUnifiedTopology: true,
@@ -27,14 +27,26 @@ app.get('/',(req, res) => {
    res.status(200).send("Server Working Well")
 })
 
-app.post('/messages/new',(req,res) => {
-   const dbMessage = req.body
-   
-   Messages.create((dbMessage) => {
-      res.status(201).send(data)
- }).catch((err) => {
-   res.status(500).send(err)
- })
+app.get('/messages/sync', (req, res) => {
+   Messages.find((err, data) => {
+      if (err) {
+         res.status(500).send(err);
+      } else {
+         res.status(200).send(data);
+      }
+   });
+})
+
+ app.post('/messages/new', (req, res) => {
+   const dbMessage = req.body;
+
+   Messages.create(dbMessage, (err, data) => {
+      if (err) {
+         res.status(500).send(err);
+      } else {
+         res.status(200).send(data);
+      }
+   });
 })
 
 
