@@ -1,30 +1,18 @@
 import express from "express";
 import mongoose from "mongoose";
 import Messages from './dbMessages.js';
-import Pusher from "pusher";
-import cors from "cors";
+
 
 // app cofig
 const app = express();
 const port = process.env.PORT || 9000
 
-const pusher = new Pusher({
-   appId: "1743307",
-   key: "422488018a7574a0b5a3",
-   secret: "b755e7cc16bbd6152cf6",
-   cluster: "ap2",
-   useTLS: true,
- });
+
 
 // midleware
 app.use(express.json());
 app.use(cors());
 
-// app.use((req, res, next) => {
-//    res.setHeader("Access-Controll-Allow-Origin", "*");
-//    res.setHeader("Access-Controll-Allow-Origin", "*");
-//    next();
-// })
 
 // DB Confg
 const connectionUrl = `mongodb+srv://creedracer111:ylP5rnbcCxjnfsDQ@cluster0.krzbde9.mongodb.net/whatsappdb?retryWrites=true&w=majority`;
